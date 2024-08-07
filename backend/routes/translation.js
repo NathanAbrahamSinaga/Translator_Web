@@ -4,18 +4,23 @@ const Translation = require('../models/Translation');
 require('dotenv').config();
 
 const router = express.Router();
+const { LlamaAPI } = require('llamaapi');
+const llama = new LlamaAPI(process.env.LLAMA_API_KEY);
 
 router.post('/translate', async (req, res) => {
   const { originalText, fromLanguage, toLanguage } = req.body;
 
-  try {
-    const response = await axios.post(
-      'https://api.llama.ai/v3.1/translate',
-      { text: originalText, source: fromLanguage, target: toLanguage },
-      { headers: { Authorization: `Bearer ${process.env.LLAMA_API_KEY}` } }
-    );
+  const apiRequestJson = {
+    model: "llama3-70b",
+    messages: [
+      { role: "system", content: "You are a translation assistant." },
+      { role: "user", content: `Translate this text from ${fromLanguage} to ${toLanguage}: ${originalText}` },
+    ]
+  };
 
-    const translatedText = response.data.translatedText;
+  try {
+    const response = await llama.run(apiRequestJson);
+    const translatedText = response.data.choices[0].message.content;
 
     const newTranslation = new Translation({
       originalText,
