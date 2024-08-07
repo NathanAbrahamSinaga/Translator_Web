@@ -6,8 +6,17 @@ const Translator = () => {
   const [translatedText, setTranslatedText] = useState('');
   const [fromLanguage, setFromLanguage] = useState('id');
   const [toLanguage, setToLanguage] = useState('en');
+  const [error, setError] = useState('');
 
   const handleTranslate = async () => {
+    if (!originalText.trim()) {
+      setError('Please enter text to translate.');
+      return;
+    }
+    
+    setError('');
+    setTranslatedText('');
+
     try {
       const response = await axios.post('http://localhost:5000/api/translate', {
         originalText,
@@ -17,6 +26,7 @@ const Translator = () => {
       setTranslatedText(response.data.translatedText);
     } catch (error) {
       console.error('Error translating text:', error);
+      setError('Failed to translate text. Please try again.');
     }
   };
 
@@ -27,18 +37,29 @@ const Translator = () => {
         value={originalText}
         onChange={(e) => setOriginalText(e.target.value)}
         placeholder="Enter text to translate"
+        rows="4"
+        cols="50"
       />
-      <select value={fromLanguage} onChange={(e) => setFromLanguage(e.target.value)}>
-        <option value="id">Indonesian</option>
-        <option value="en">English</option>
-        <option value="ja">Japanese</option>
-      </select>
-      <select value={toLanguage} onChange={(e) => setToLanguage(e.target.value)}>
-        <option value="id">Indonesian</option>
-        <option value="en">English</option>
-        <option value="ja">Japanese</option>
-      </select>
+      <div>
+        <label>
+          From:
+          <select value={fromLanguage} onChange={(e) => setFromLanguage(e.target.value)}>
+            <option value="id">Indonesian</option>
+            <option value="en">English</option>
+            <option value="ja">Japanese</option>
+          </select>
+        </label>
+        <label>
+          To:
+          <select value={toLanguage} onChange={(e) => setToLanguage(e.target.value)}>
+            <option value="id">Indonesian</option>
+            <option value="en">English</option>
+            <option value="ja">Japanese</option>
+          </select>
+        </label>
+      </div>
       <button onClick={handleTranslate}>Translate</button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <h2>Translation</h2>
       <p>{translatedText}</p>
     </div>
