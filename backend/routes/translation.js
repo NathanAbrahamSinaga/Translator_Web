@@ -1,30 +1,28 @@
 const express = require('express');
 const Translation = require('../models/Translation');
 require('dotenv').config();
-
-const LlamaAI = require('llamaai');
-const llamaAPI = new LlamaAI(process.env.LLAMA_API_KEY);
-
 const router = express.Router();
 
 router.post('/translate', async (req, res) => {
   const { originalText, fromLanguage, toLanguage } = req.body;
 
-  const apiRequestJson = {
-    messages: [
-      { role: "system", content: "You are a translation assistant." },
-      { role: "user", content: `Translate this text from ${fromLanguage} to ${toLanguage}: ${originalText}` },
-    ],
-  };
-
   try {
-    console.log("Requesting translation with payload:", JSON.stringify(apiRequestJson));
+    console.log("Requesting translation with payload:", JSON.stringify({ originalText, fromLanguage, toLanguage }));
     console.log("Using API Key:", process.env.LLAMA_API_KEY);
 
+    // Use dynamic import to load the LlamaAI package
+    const { default: LlamaAI } = await import('llamaai');
+    const llamaAPI = new LlamaAI(process.env.LLAMA_API_KEY);
+
+    const apiRequestJson = {
+      messages: [
+        { role: "system", content: "You are a translation assistant." },
+        { role: "user", content: `Translate this text from ${fromLanguage} to ${toLanguage}: ${originalText}` },
+      ],
+    };
+
     const response = await llamaAPI.run(apiRequestJson);
-
     console.log("Received response:", response);
-
     const translatedText = response.choices[0].message.content;
 
     const newTranslation = new Translation({
@@ -33,9 +31,7 @@ router.post('/translate', async (req, res) => {
       fromLanguage,
       toLanguage,
     });
-
     await newTranslation.save();
-
     res.json(newTranslation);
   } catch (error) {
     if (error.response) {
