@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 
 
 app.use(cors({
-  origin: 'https://translator-bahasa.vercel.app/',
+  origin: 'https://translator-bahasa.vercel.app',
   credentials: true,
   method: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
