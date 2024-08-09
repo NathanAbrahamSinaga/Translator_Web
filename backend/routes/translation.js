@@ -10,13 +10,14 @@ router.post('/translate', async (req, res) => {
     console.log("Requesting translation with payload:", JSON.stringify({ originalText, fromLanguage, toLanguage }));
     console.log("Using API Key:", process.env.LLAMA_API_KEY);
 
+    // Use dynamic import to load the LlamaAI package
     const { default: LlamaAI } = await import('llamaai');
     const llamaAPI = new LlamaAI(process.env.LLAMA_API_KEY);
 
     const apiRequestJson = {
       messages: [
         { role: "system", content: "You are a translation assistant." },
-        { role: "user", content: `Translate this text from ${fromLanguage} to ${toLanguage}: ${originalText}, and only respond with the translation` },
+        { role: "user", content: `Translate this text from ${fromLanguage} to ${toLanguage}: ${originalText}` },
       ],
     };
 

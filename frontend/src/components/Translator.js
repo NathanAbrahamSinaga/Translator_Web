@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../index.css';
+import './css/Translator.css';
 
 const Translator = () => {
   const [originalText, setOriginalText] = useState('');
