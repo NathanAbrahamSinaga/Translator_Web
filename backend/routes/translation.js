@@ -17,7 +17,7 @@ router.post('/translate', async (req, res) => {
     const apiRequestJson = {
       messages: [
         { role: "system", content: "You are a translation assistant." },
-        { role: "user", content: `Translate this text from ${fromLanguage} to ${toLanguage}: ${originalText}` },
+        { role: "user", content: `Translate this text from ${fromLanguage} to ${toLanguage}: ${originalText}, and only respond with the translation` },
       ],
     };
 
