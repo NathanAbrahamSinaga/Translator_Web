@@ -7,8 +7,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://translator-bahasa.vercel.app/',
   credentials: true,
   method: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],

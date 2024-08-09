@@ -19,7 +19,7 @@ const Translator = () => {
     setTranslatedText('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/translate', {
+      const response = await axios.post('https://translator-web-api.vercel.app/api/translate', {
         originalText,
         fromLanguage,
         toLanguage,
