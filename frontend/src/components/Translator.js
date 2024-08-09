@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../index.css';
 
 const Translator = () => {
   const [originalText, setOriginalText] = useState('');
@@ -31,16 +32,15 @@ const Translator = () => {
   };
 
   return (
-    <div>
+    <div className="translator-container">
       <h1>Translator</h1>
       <textarea
         value={originalText}
         onChange={(e) => setOriginalText(e.target.value)}
         placeholder="Enter text to translate"
         rows="4"
-        cols="50"
       />
-      <div>
+      <div className="language-selectors">
         <label>
           From:
           <select value={fromLanguage} onChange={(e) => setFromLanguage(e.target.value)}>
@@ -59,9 +59,9 @@ const Translator = () => {
         </label>
       </div>
       <button onClick={handleTranslate}>Translate</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       <h2>Translation</h2>
-      <p>{translatedText}</p>
+      <div className="translated-text">{translatedText}</div>
     </div>
   );
 };
